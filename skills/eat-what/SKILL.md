@@ -1,6 +1,5 @@
 ---
 name: eat-what
-version: 1.0.0
 description: |
   解决"今天吃啥"。给上班族在食堂/外卖/小店场景下能真正吃到的、营养均衡的一餐建议，并记住用户的过敏、忌口、挑食和口味，长期生效。
 
@@ -11,6 +10,11 @@ description: |
   (4) 用户对上一次推荐反馈："换一个"、"这个吃过了"、"不爱吃这个"
 
   **不适用**：具体菜谱/怎么做菜、减肥计划制定、疾病的医学营养治疗（见下方医疗降级规则）。
+license: MIT. See LICENSE
+compatibility: 需要 python3（仅用标准库）。运行时不联网、不需要 API Key，无第三方依赖。
+metadata:
+  author: isa-moon
+  version: "1.1.0"
 ---
 
 # 今天吃啥
@@ -36,9 +40,10 @@ description: |
 
 ## 工具
 
-下面的路径**相对本 SKILL.md 所在目录**。先定位 skill 目录（personal 装在 `~/.claude/skills/eat-what/`，
-项目级在 `<项目>/.claude/skills/eat-what/`，plugin 在 `${CLAUDE_PLUGIN_ROOT}/skills/eat-what/`，
-claude.ai 上传后由平台挂载），把 `$P` 指向其中的 `scripts/profile_tool.py`：
+下面的路径**相对本 SKILL.md 所在目录**。不同 agent 的 skill 安装位置不一样
+（`~/.agents/skills/eat-what/`、`~/.claude/skills/eat-what/`、项目内的 `.claude/skills/`、
+或由平台挂载的临时目录），所以**不要硬编码绝对路径**——先确定本 SKILL.md 在哪，
+再把 `$P` 指向同目录下的 `scripts/profile_tool.py`：
 
 ```bash
 P=<skill目录>/scripts/profile_tool.py
@@ -55,12 +60,13 @@ python3 $P export                                # 导出单行 JSON 快照
 python3 $P import --json '<快照>'                 # 从快照恢复
 ```
 
-档案默认在 `~/.claude/eat-what/`（可用环境变量 `EAT_WHAT_HOME` 覆盖）。
-**放在 skill 目录之外**，skill 升级不清空用户数据；跨工作目录稳定。
+档案默认在 `~/.agents/eat-what/`（可用环境变量 `EAT_WHAT_HOME` 覆盖；老版本的
+`~/.claude/eat-what/` 若已存在会自动沿用）。**放在 skill 目录之外且不绑定任何一家 agent**，
+所以换 agent、升级 skill、换工作目录，忌口档案都还在。
 
 ### ⚠️ 沙箱环境（档案存不住时）
 
-`paths` 返回 `persistent: false` 表示档案写在临时目录、**本次会话结束即丢失**（claude.ai 等沙箱环境）。此时：
+`paths` 返回 `persistent: false` 表示档案写在临时目录、**本次会话结束即丢失**（网页版等沙箱环境）。此时：
 
 1. onboarding 之后**额外输出一段档案快照**（`python3 $P export` 的结果），告诉用户：
    「把这行存进项目说明/自定义指令，下次对话我就不用重新问了」
@@ -99,11 +105,14 @@ python3 $P check --text "<把准备发出的完整文案原样传进去>"
 
 ---
 
-## Onboarding（仅首次，最多两轮 AskUserQuestion）
+## Onboarding（仅首次，最多两轮提问）
 
 用户是上班族，耐心有限。**两轮问完，问完立刻给出本次推荐**，不能让人填完问卷空手而归。
 
-- **第一轮**（安全与忌口，多选 + 允许"其他"自由填）：过敏原？绝对不吃的东西？不爱吃但能接受的？
+如果你所在的 agent 有结构化提问/多选控件，用它并允许"其他"自由填；没有就用普通文字提问，
+一次把一轮的几个问题列成带编号的清单，让用户一条消息答完。**不要拆成逐条一问一答。**
+
+- **第一轮**（安全与忌口）：过敏原？绝对不吃的东西？不爱吃但能接受的？
 - **第二轮**（场景）：公司有没有食堂？午饭预算区间？口味偏好（辣度/菜系）？有没有健康目标？
 
 落盘后回显一句确认：「记住了：对 X 过敏、不吃 Y，以后都会避开」，然后**当场出这一餐的推荐**。
@@ -156,7 +165,7 @@ python3 $P check --text "<把准备发出的完整文案原样传进去>"
 ## 边界（做不到的，别硬凑）
 
 - **拿不到菜单和实时价格**。高德 API 只到"品类+人均"粒度且不返回菜单；大众点评/美团无公开 API 且禁止抓取。所以不绑定具体店铺。
-- **不做定时推送**（当前版本）。内置 cron 只在会话开着且空闲时触发、7 天过期，做不到准点闹钟。
+- **不做定时推送**（当前版本）。skill 本身没有定时能力，agent 的内置定时器通常只在会话开着且空闲时才触发，做不到准点闹钟。真要准点提醒得靠系统级定时任务（launchd / cron / 任务计划程序）另行配置。
 - 用户要"附近哪家店"时，如实说明拿不到店铺数据，改为给品类和点单话术。
 
 页脚建议加一行：`一般性饮食建议，不替代医疗或营养师意见`。

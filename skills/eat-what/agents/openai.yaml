@@ -1,0 +1,4 @@
+interface:
+  display_name: "今天吃啥"
+  short_description: "上班族的一餐建议：食堂/外卖/小店能真正吃到的搭配 + 点单话术，记住你的过敏和忌口"
+  default_prompt: "中午吃啥？"

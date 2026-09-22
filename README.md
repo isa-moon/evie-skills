@@ -4,17 +4,22 @@
 
 # 🍚 Evie Skills
 
-#### 自己每天在用的 Skill，开源在这里
+#### 自己每天在用的 AI Agent Skill，开源在这里
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
 [![Skills](https://img.shields.io/badge/Skills-1-10B981?style=for-the-badge)](#-skills)
-[![Plugin](https://img.shields.io/badge/Claude_Code-Plugin-8B5CF6?style=for-the-badge)](#-安装)
+[![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
 
-![No Dependencies](https://img.shields.io/badge/依赖-仅_Python_标准库-10B981?style=flat-square)
-![Offline](https://img.shields.io/badge/运行时-不联网_·_无需_API_Key-3B82F6?style=flat-square)
+![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square)
+![Codex](https://img.shields.io/badge/Codex-Skill-10B981?style=flat-square)
+![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-8B5CF6?style=flat-square)
+![40+ Agents](https://img.shields.io/badge/40%2B_Agents-Compatible-3B82F6?style=flat-square)
 
 </div>
 
+这里的每个 skill 都遵循 [Agent Skills](https://agentskills.io) 开放标准——由 Anthropic 提出并开源，
+Claude Code、Codex、OpenClaw、Cursor、Gemini CLI、Copilot、OpenCode 等 40+ 个 agent 都能装。
+**不是只给 Claude Code 用的。**
 
 ---
 
@@ -28,28 +33,36 @@
 
 ## 📦 安装
 
-### 方式一：插件
+### 最省事：让 agent 自己装
 
-```bash
-claude plugin marketplace add isa-moon/evie-skills
-claude plugin install eat-what@evie-skills
-```
-
-重开一个会话即生效。以后 `claude plugin update eat-what@evie-skills` 就能升级。
-
-### 方式二：直接让 Agent 装
-
-在 Claude Code 里直接说：
+在任何支持 Agent Skills 的 agent 里（Claude Code、Codex、OpenClaw、Cursor…）直接说：
 
 ```
 帮我安装这个 skill：https://github.com/isa-moon/evie-skills/tree/main/skills/eat-what
 ```
 
-### 方式三：手动
+它会自己 clone 到对应目录，不用你操心路径。装完重开一个会话。
 
-把 `skills/eat-what/` 整个目录拷进 `~/.claude/skills/`（个人）或 `<项目>/.claude/skills/`（跟着仓库走）。
+### 手动装
 
-更多细节（claude.ai 上传、跨机器搬档案）见 [INSTALL.md](./skills/eat-what/INSTALL.md)。
+把 `skills/eat-what/` 整个目录放进你的 agent 读 skill 的位置：
+
+| Agent | 路径 |
+|---|---|
+| Codex / Gemini CLI / Copilot / OpenCode / OpenClaw 等 | `~/.agents/skills/eat-what/` |
+| Claude Code（个人 / 项目级） | `~/.claude/skills/eat-what/` 或 `<项目>/.claude/skills/` |
+
+### Claude Code 用户的额外选项：装成 plugin
+
+只有 Claude Code 支持，好处是能一键更新：
+
+```bash
+claude plugin marketplace add isa-moon/evie-skills
+claude plugin install eat-what@evie-skills
+# 以后升级：claude plugin update eat-what@evie-skills
+```
+
+更多细节（跨 agent 共用一份档案、网页版沙箱、换机器搬档案）见 [INSTALL.md](./skills/eat-what/INSTALL.md)。
 
 ---
 
@@ -129,17 +142,19 @@ claude plugin install eat-what@evie-skills
 
 **你的数据在哪**
 
-过敏和忌口存在本机 `~/.claude/eat-what/`（可用环境变量 `EAT_WHAT_HOME` 覆盖），**在 skill 目录之外**：
+过敏和忌口存在本机 `~/.agents/eat-what/`（可用环境变量 `EAT_WHAT_HOME` 覆盖），
+**在 skill 目录之外，也不在任何一家 agent 的私有目录里**：
 
 - 不进仓库、不上传、不出你的电脑
 - 升级 skill 不会清空
+- **换 agent 不用重录**：在 Claude Code 里录的忌口，装到 Codex 上照样生效
 - 换机器用 `profile_tool.py export` / `import` 搬（快照含健康信息，别贴到公开渠道）
 
 **明确不做的事**
 
-不做定时推送（内置 cron 只在会话开着且空闲时触发，做不到准点闹钟）、不绑定具体店铺、不给菜单和实时价格。理由写在 [SKILL.md](./skills/eat-what/SKILL.md) 的「边界」一节——做不到的事不硬凑。
+不做定时推送（agent 的内置定时器一般只在会话开着时触发，做不到准点闹钟）、不绑定具体店铺、不给菜单和实时价格。理由写在 [SKILL.md](./skills/eat-what/SKILL.md) 的「边界」一节——做不到的事不硬凑。
 
-零第三方依赖，只用 Python 标准库；运行时不联网，不需要任何 API Key。
+零第三方依赖，只用 Python 标准库；运行时不联网，不需要任何 API Key。遵循 Agent Skills 开放标准。
 
 </td></tr>
 </table>

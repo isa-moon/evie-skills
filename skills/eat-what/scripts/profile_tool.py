@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 """eat-what 口味档案与历史记录的唯一读写入口。
 
-数据目录按 EAT_WHAT_HOME → ~/.claude/eat-what → 临时目录 的顺序解析，
+数据目录按 EAT_WHAT_HOME → 已存在的旧目录 → ~/.agents/eat-what → 临时目录 的顺序解析，
 放在 skill 目录之外，skill 升级不会清空用户数据。先跑 `paths` 可知落在哪、是否跨会话保留。
+与具体 agent 无关：Claude Code、Codex、OpenClaw 等共用同一份档案。
 
 子命令：
   paths                                 数据落在哪 / 是否持久化（沙箱环境先跑这个）
@@ -31,8 +32,10 @@ def _resolve_base():
     """按可移植性优先级决定数据目录。
 
     1. 环境变量 EAT_WHAT_HOME —— 显式指定，优先级最高
-    2. ~/.claude/eat-what —— Claude Code 的常规位置，跨工作目录稳定
-    3. 临时目录 —— 家目录不可写时（如 claude.ai 沙箱）的兜底，
+    2. 已存在的旧目录 —— 换 agent 或升级后不把用户档案甩掉
+    3. ~/.agents/eat-what —— 默认位置。跨 agent 通用，不绑定任何一家厂商，
+       Claude Code / Codex / OpenClaw 等装在哪都读同一份档案
+    4. 临时目录 —— 家目录不可写时（网页版沙箱等）的兜底，
        仅在当前会话内有效，档案不跨会话保留（见 paths 子命令的 persistent 字段）
     """
     env = os.environ.get("EAT_WHAT_HOME")
@@ -40,7 +43,12 @@ def _resolve_base():
         return os.path.abspath(os.path.expanduser(env))
     home = os.path.expanduser("~")
     if home and home != "~" and os.path.isdir(home) and os.access(home, os.W_OK):
-        return os.path.join(home, ".claude", "eat-what")
+        default = os.path.join(home, ".agents", "eat-what")
+        # 老版本把档案写在 ~/.claude/eat-what，沿用它而不是让用户重新录一遍忌口
+        for candidate in (default, os.path.join(home, ".claude", "eat-what")):
+            if os.path.exists(os.path.join(candidate, "profile.json")):
+                return candidate
+        return default
     return os.path.join(tempfile.gettempdir(), "eat-what")
 
 
@@ -308,7 +316,7 @@ def cmd_recent(args):
 
 
 def cmd_paths(args):
-    """告诉调用方档案落在哪、是否跨会话保留。上传到 claude.ai 等沙箱环境时先跑这个。"""
+    """告诉调用方档案落在哪、是否跨会话保留。在网页版等沙箱环境里先跑这个。"""
     ephemeral = BASE.startswith(tempfile.gettempdir())
     print(json.dumps({
         "skill_dir": SKILL_DIR,
@@ -325,7 +333,7 @@ def cmd_paths(args):
 
 
 def cmd_export(args):
-    """导出成单行 JSON，便于粘贴进 claude.ai 项目说明或搬到另一台机器。"""
+    """导出成单行 JSON，便于粘贴进 agent 的项目说明/自定义指令，或搬到另一台机器。"""
     data = load()
     data.pop("updated_at", None)
     print(json.dumps(data, ensure_ascii=False, separators=(",", ":")))

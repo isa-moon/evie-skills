@@ -4,18 +4,22 @@
 
 # 🍚 Evie Skills
 
-#### Claude Code skills I actually use every day, open-sourced here
+#### AI agent skills I actually use every day, open-sourced here
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
 [![Skills](https://img.shields.io/badge/Skills-1-10B981?style=for-the-badge)](#-skills)
-[![Plugin](https://img.shields.io/badge/Claude_Code-Plugin-8B5CF6?style=for-the-badge)](#-install)
+[![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
 
-![No Dependencies](https://img.shields.io/badge/deps-Python_stdlib_only-10B981?style=flat-square)
-![Offline](https://img.shields.io/badge/runtime-offline_·_no_API_key-3B82F6?style=flat-square)
+![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square)
+![Codex](https://img.shields.io/badge/Codex-Skill-10B981?style=flat-square)
+![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-8B5CF6?style=flat-square)
+![40+ Agents](https://img.shields.io/badge/40%2B_Agents-Compatible-3B82F6?style=flat-square)
 
 </div>
 
-Everything here ran on my own machine for a while and proved useful before it got published.
+Every skill here follows the [Agent Skills](https://agentskills.io) open standard — originally built by
+Anthropic and released as an open format. Claude Code, Codex, OpenClaw, Cursor, Gemini CLI, Copilot,
+OpenCode and 40+ other agents can install it. **This is not a Claude-Code-only skill.**
 
 ---
 
@@ -29,28 +33,37 @@ Everything here ran on my own machine for a while and proved useful before it go
 
 ## 📦 Install
 
-### Option 1 — as a plugin (recommended; supports one-command updates)
+### Easiest: let the agent install it
 
-```bash
-claude plugin marketplace add isa-moon/evie-skills
-claude plugin install eat-what@evie-skills
-```
-
-Restart your session. Later, `claude plugin update eat-what@evie-skills` to upgrade.
-
-### Option 2 — let the agent install it
-
-Just say this in Claude Code:
+In any agent that supports Agent Skills (Claude Code, Codex, OpenClaw, Cursor…), just say:
 
 ```
 Install this skill for me: https://github.com/isa-moon/evie-skills/tree/main/skills/eat-what
 ```
 
-### Option 3 — manual
+It clones itself into the right directory. Restart your session afterwards.
 
-Copy `skills/eat-what/` into `~/.claude/skills/` (personal) or `<project>/.claude/skills/` (checked into your repo).
+### Manual
 
-See [INSTALL.md](./skills/eat-what/INSTALL.md) for claude.ai uploads and moving your profile between machines.
+Copy the whole `skills/eat-what/` directory into wherever your agent reads skills from:
+
+| Agent | Path |
+|---|---|
+| Codex / Gemini CLI / Copilot / OpenCode / OpenClaw, etc. | `~/.agents/skills/eat-what/` |
+| Claude Code (personal / project) | `~/.claude/skills/eat-what/` or `<project>/.claude/skills/` |
+
+### Extra option for Claude Code users: install as a plugin
+
+Claude Code only; the upside is one-command updates:
+
+```bash
+claude plugin marketplace add isa-moon/evie-skills
+claude plugin install eat-what@evie-skills
+# later: claude plugin update eat-what@evie-skills
+```
+
+See [INSTALL.md](./skills/eat-what/INSTALL.md) for sharing one profile across agents, sandboxed web
+environments, and moving your profile between machines.
 
 ---
 
@@ -130,17 +143,19 @@ It connects to no map or review API. So it will say "find a place that does stea
 
 **Where your data lives**
 
-Allergies and dislikes are stored locally at `~/.claude/eat-what/` (override with `EAT_WHAT_HOME`), **outside the skill directory**:
+Allergies and dislikes are stored locally at `~/.agents/eat-what/` (override with `EAT_WHAT_HOME`),
+**outside the skill directory and outside any single vendor's config folder**:
 
 - Never committed, never uploaded, never leaves your machine
 - Survives skill upgrades
+- **Switching agents doesn't cost you a re-entry**: what you told it in Claude Code still applies in Codex
 - Move it with `profile_tool.py export` / `import` (the snapshot contains health info — don't paste it anywhere public)
 
 **What it deliberately doesn't do**
 
-No scheduled push notifications (the built-in cron only fires while a session is open and idle — it can't be an alarm clock), no binding to specific restaurants, no menus or live prices. Reasons are written up in the "边界" section of [SKILL.md](./skills/eat-what/SKILL.md) — if it can't be done properly, it isn't faked.
+No scheduled push notifications (an agent's built-in scheduler generally only fires while a session is open — it can't be an alarm clock), no binding to specific restaurants, no menus or live prices. Reasons are written up in the "边界" section of [SKILL.md](./skills/eat-what/SKILL.md) — if it can't be done properly, it isn't faked.
 
-Zero third-party dependencies, Python stdlib only. Offline at runtime, no API key of any kind.
+Zero third-party dependencies, Python stdlib only. Offline at runtime, no API key of any kind. Follows the Agent Skills open standard.
 
 </td></tr>
 </table>

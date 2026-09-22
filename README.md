@@ -4,7 +4,7 @@
 
 # 🍚 Evie Skills
 
-#### 自己每天在用的 Claude Code Skill，开源在这里
+#### 自己每天在用的 Skill，开源在这里
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
 [![Skills](https://img.shields.io/badge/Skills-1-10B981?style=for-the-badge)](#-skills)
@@ -15,7 +15,6 @@
 
 </div>
 
-都是在自己机器上跑了一阵、确实省事，才搬出来的。
 
 ---
 
@@ -29,7 +28,7 @@
 
 ## 📦 安装
 
-### 方式一：插件（推荐，一次配置，以后能一键更新）
+### 方式一：插件
 
 ```bash
 claude plugin marketplace add isa-moon/evie-skills

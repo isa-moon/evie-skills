@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__/
+*.pyc
+# 用户档案不该进仓库（正常情况下它在 ~/.claude/eat-what/，这里只是双保险）
+profile.json
+history.jsonl

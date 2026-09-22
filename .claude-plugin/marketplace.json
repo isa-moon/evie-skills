@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "evie-skills",
+  "description": "个人 Claude Code skill 集合",
+  "owner": {
+    "name": "isa-moon"
+  },
+  "plugins": [
+    {
+      "name": "eat-what",
+      "description": "解决「今天吃啥」。按《中国居民膳食指南(2022)》给上班族在食堂/外卖/小店能真正吃到的一餐建议，记住过敏与忌口并长期生效。",
+      "author": {
+        "name": "isa-moon"
+      },
+      "category": "productivity",
+      "source": "./plugins/eat-what"
+    }
+  ]
+}

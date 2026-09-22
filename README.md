@@ -17,9 +17,6 @@
 
 </div>
 
-这里的每个 skill 都遵循 [Agent Skills](https://agentskills.io) 开放标准——由 Anthropic 提出并开源，
-Claude Code、Codex、OpenClaw、Cursor、Gemini CLI、Copilot、OpenCode 等 40+ 个 agent 都能装。
-**不是只给 Claude Code 用的。**
 
 ---
 
